@@ -1,0 +1,33 @@
+version: 2
+
+builds:
+  - main: .
+    binary: cache-sweep
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - darwin
+      - linux
+      - windows
+    goarch:
+      - amd64
+      - arm64
+
+archives:
+  - name_template: "cache-sweep_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    formats: [tar.gz]
+    format_overrides:
+      - goos: windows
+        formats: [zip]
+
+checksum:
+  name_template: checksums.txt
+
+changelog:
+  disable: true
+
+release:
+  # go-semantic-release already created the tag and GitHub Release with its
+  # changelog; append these binaries to that existing release instead of
+  # creating a new one.
+  mode: append
