@@ -7,6 +7,9 @@
 *.dll
 *.so
 *.dylib
+/cache-sweep
+/main.go
+/go.mod
 
 # Test binary, built with `go test -c`
 *.test
