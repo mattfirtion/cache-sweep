@@ -32,6 +32,28 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: mattfirtion/cache-sweep
 
+  goreleaser-check:
+    needs: [test, commitlint]
+    if: |
+      always() &&
+      needs.test.result == 'success' &&
+      (needs.commitlint.result == 'success' || needs.commitlint.result == 'skipped')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Validate GoReleaser build
+        uses: goreleaser/goreleaser-action@v6
+        with:
+          version: latest
+          args: build --snapshot --clean
+
   commitlint:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
